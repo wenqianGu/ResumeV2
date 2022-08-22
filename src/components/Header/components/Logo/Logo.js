@@ -2,7 +2,7 @@
 
 const Logo = () => (
     <div className="logo">
-        <span classNameName="logo__highlight">Lisa</span>
+        <span className="logo__highlight">Lisa</span>
          GU
     </div>
 )

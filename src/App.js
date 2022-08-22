@@ -6,11 +6,6 @@ const App = () => (
   </div>
 )
 
-
-
-
-
-
 /**
  * 所有component的首字母都要大写 
  * 首字母小写的时HTML 标签
