@@ -1,9 +1,17 @@
-import './App.css';
 import Header from './components/Header';
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  max-width: 1000px;
+  margin: auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`
 const App = () => (
-  <div className='container'>
+  <Wrapper>
     <Header />
-  </div>
+  </Wrapper>
 )
 
 /**

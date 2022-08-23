@@ -1,59 +1,49 @@
-/**
- * props
- * 当我们使用component时，相似的责任/UI会在
- * 不同的地方调用
- * 不同形式的调用
- *
- *
- * Javascript 如何让一个function 满足不同的条件？
- * sum 1+2 / sum 2+3
- * Arguments 传参
- *
- * 在JSX中
- * 所有<>内的内容都被解释为HTML
- * 所有{}内的内容都被解释为JavaScript
- * */
-// const Item = (props) => (
-//     <a className="navbar__item" href={props.href}>{props.text}</a>
-// )
+// import classNames from "classnames/bind"
+// // import styles from './Item.module.css'
+import styled, {css} from 'styled-components'
 
-const getClassName = (classNameCondition) => {
-    const classNames = []
-    Object.keys(classNameCondition).forEach((className) =>{
-        if(!classNameCondition[className]){
-            return
-        }
-        classNames.push(className)
-    })
-    return classNames.join(' ')
+//可以复用的模块
+const withStrongAfter = css`
+opacity: 1;
+
+::after {
+    width: 24px;
 }
+`
 
+const Item = styled.a`
+    padding: 16px;
+    text-decoration: none;
+    color: #49515d;
+    font-size: 15px;
+    opacity: 0.6;
+    display: block;
+    transition: opacity 0.3s ease-in-out;
 
-// 结构赋值
-const Item = ({
-                  href,
-                  active = false,
-                  children,
-              }) => {
-    // let className = 'navbar__item'
-    // if (active) {
-    //     className += ' navbar__item--active'
-    // }
-    // method 2
-    // const className = active ? 'navbar__item navbar__item--active' : 'navbar__item' // navbar__item 重复？
-   // method 3 -> 不易读
-   //  const className = `navbar__item ${active ? ' navbar__item--active' : ''}`
-    const className = getClassName({
-        'navbar__item':true,
-        'navbar__item--active':active,
-    })
-    return (
-        <a className={className} href={href}>{children}</a>
-    )
-}
-// props 默认的API
-// 或者在props里面直接赋 默认值
-// Item.defaultProps = {
-//     active: false,
-// }
+    ::after{
+        content: "";
+    width: 0;
+    border-bottom: 3px solid #377e9a;
+    margin: auto;
+    margin-top: 4px;
+    display: block;
+    transition: width 0.3s ease-in-out;
+    }
+
+    /* :hover{
+        opacity: 1;
+    }
+    :hover::after {
+        width: 24px;
+    } */
+    :last-of-type {
+        padding-right: 0;
+    }
+    :hover{
+        ${withStrongAfter}
+    }
+
+    ${(props) => props.active && withStrongAfter}
+`
+
 export default Item;

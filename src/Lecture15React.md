@@ -204,3 +204,174 @@ return (
 3. 什么是程序员 
     - 复杂的事情简单化，简单化的事情易用化 
     - 避免 over engineering
+
+### Conditional className 实现方法
+1. If-else 
+2. 短路计算 
+3. 短路计算 - 重复部分（navbar_item）提出来，后面做三元计算
+4. 提取出来getClassName()方法，解决所有的conditional className的情况 
+    - 后面遇到的所有confitional className拼接的问题，都可以通过这个方法解决 
+    - 未来的reusable maintinable 
+    - 要善于去观察代码里面的不足之处 
+5. Google - react condition add className 
+    - https://www.pluralsight.com/guides/applying-classes-conditionally-react
+    - 提高自己学习的能力 
+    - https://www.npmjs.com/package/classnames 
+
+
+
+```jsx
+const getClassName = (classNameCondition) => {
+    const classNames = []
+    Object.keys(classNameCondition).forEach((className) =>{
+        if(!classNameCondition[className]){
+            return
+        }
+        classNames.push(className)
+    })
+    return classNames.join(' ')
+}
+
+const Item = ({
+                  href,
+                  active = false,
+                  children,
+              }) => {
+    // let className = 'navbar__item'
+    // if (active) {
+    //     className += ' navbar__item--active'
+    // }
+    // method 2
+    // const className = active ? 'navbar__item navbar__item--active' : 'navbar__item' // navbar__item 重复？
+   // method 3 -> 不易读
+   //  const className = `navbar__item ${active ? ' navbar__item--active' : ''}`
+    const className = getClassName({
+        'navbar__item':true,
+        'navbar__item--active':active,
+    })
+    return (
+        <a className={className} href={href}>{children}</a>
+    )
+}
+
+```
+* Mthods 5 JS Package - 实现condition className.  
+```jsx
+import cx from "classnames"
+const Item = ({
+                  href,
+                  active = false,
+                  children,
+              }) => {
+const className = cx('navbar__item',{
+        'navbar__item--active':active,
+    })
+
+    return (
+        <a className={className} href={href}>{children}</a>
+    )
+              }
+```
+
+#### Module CSS
+* CSS 只作用于当前的component 
+* CSS module 你负责声明CSS，这个module负责关心全局性的问题 
+* 解决了命名冲突的问题 
+    - Item.js
+    - Item.module.css -> 只针对于Item生效的一段Item 
+    - 引入 import styles from './Item.module.css'
+    - 引用的时候，是{} reference到一个object的key值保存起来 
+    - <a className={styles.wrapper} href={href}>
+            {children}
+        </a>
+    - 编译的时候，只关心 link到了styles.wrapper ->然后更名为其他random名字
+    - 通过JavaScript的方法 解决了全局变量的问题 
+* 在浏览器 render的元素： 
+    <a class="Item_wrapper__XtcdE" href="HOME">Home</a>
+* Google search -> className CSS module 
+
+```jsx
+import classNames from "classnames/bind"
+import styles from './Item.module.css'
+
+const cx = classNames.bind(styles);
+const Item = ({
+                  href,
+                  active = false,
+                  children,
+              }) => {
+    // ES6    'active': active, 赋值和变量同名，可以用省略写法
+//    const className = cx('wrapper',{
+//     'active': active,
+//    })
+
+    return (
+        <a className={cx('wrapper',{active})} href={href}>
+            {children}
+        </a>
+    )
+}
+export default Item;
+```
+
+## styled component 
+* npm i styled-components 
+  - https://styled-components.com/
+* 可以重复复用的一段HTML+JS -> React component 
+* 可以重复用的一段CSS代码，也可以设计为CSS component 
+
+* Styled component <a>
+```jsx
+import styled from 'styled-components'
+
+const Wrapper = styled.a`
+    padding: 16px;
+    text-decoration: none;
+    color: #49515d;
+    font-size: 15px;
+    opacity: 0.6;
+    display: block;
+    transition: opacity 0.3s ease-in-out;
+
+    ::after{
+        content: "";
+    width: 0;
+    border-bottom: 3px solid #377e9a;
+    margin: auto;
+    margin-top: 4px;
+    display: block;
+    transition: width 0.3s ease-in-out;
+    }
+
+    :hover{
+        opacity: 1;
+    }
+    :hover::after {
+        width: 24px;
+    }
+    :last-of-type {
+        padding-right: 0;
+    }
+
+    ${(props) => props.active &&`
+    opacity: 1;
+
+    ::after {
+        width: 24px;
+    }
+    `}
+`
+const Item = ({
+    href,
+    active = false,
+    children,
+}) => (
+    <Wrapper active={active} href={href}>
+        {children}
+    </Wrapper>
+)
+// 这里是把wrapper传进去 
+
+``` 
+
+* Item 和 Wrapper的关系 都有三个元素 href active children 

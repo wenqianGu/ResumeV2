@@ -1,15 +1,27 @@
 import Logo from './components/Logo';
 import Navigation from './components/Navigation';
-import './Header.css'
+
+import styled from 'styled-components'
+
+const Wrapper = styled.header`
+  padding: 15px 0;
+    display: flex;
+    align-items: center;
+`
+const Left = styled.div`
+    flex: 1;
+`
+const Right = styled.div`
+`
 
 const Header = () => (
-    <header className="nav">
-        <div className="nav__left">
+    <Wrapper>
+        <Left>
             <Logo/>
-        </div>
-        <div className="nav__right">
+        </Left>
+        <Right>
             <Navigation />
-        </div>
-    </header>
+        </Right>
+    </Wrapper>
 )
 export default Header;

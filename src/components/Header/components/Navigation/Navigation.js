@@ -41,17 +41,19 @@ const ITEMS = [{
 }, {
     href: 'BLOG',
     children: 'Blog',
+    active:true,
 }, {
     href: 'CONTACT',
     children: 'Contact',
 }]
 const Navigation = () => (
     <div className="navbar">
-        {ITEMS.map((item) => (
+        {ITEMS.map(({href, children, active}) => (
             <Item
-                key={item.href}
-                href={item.href}
-            >{item.children}</Item>
+                key={href}
+                href={href}
+                active={active}
+            >{children}</Item>
         ))}
     </div>
 )
