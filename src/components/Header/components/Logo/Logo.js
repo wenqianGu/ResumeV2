@@ -1,10 +1,19 @@
- import './Logo.css'
 
+import styled from 'styled-components'
+
+ const Wrapper = styled.div`
+   font-size: 1.5rem;
+   font-weight: 500;
+ `
+ const Highlight = styled.span`
+   color: #9a3737;
+   margin-right: 0.5rem;
+ `
 const Logo = () => (
-    <div className="logo">
-        <span className="logo__highlight">Lisa</span>
+    <Wrapper>
+        <Highlight>Lisa</Highlight>
          GU
-    </div>
+    </Wrapper>
 )
 
 export default Logo;

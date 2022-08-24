@@ -375,3 +375,17 @@ const Item = ({
 ``` 
 
 * Item 和 Wrapper的关系 都有三个元素 href active children 
+* 如果一个内容可以在多个地方复用的话，可以做成公用component
+
+### Service 页面component划分 
+- Services
+  - My Services
+    - Service
+  - Clients
+    - Client
+
+
+### CSS 
+* position:sticky 
+* 在父DIV里面，如果子类覆盖了一些样式；可以使用 overflow:hidden 
+* 

@@ -1,5 +1,3 @@
-import './Navigation.css'
-import Item from "./Item";
 
 /**
  * props
@@ -29,6 +27,13 @@ import Item from "./Item";
  * <input type="submit" value="Login" />
  * children -> <Item> innerHTML </Item>
  */
+
+import styled from 'styled-components'
+import Item from "./Item";
+
+const Navbar = styled.div`
+  display: flex;
+`
 const ITEMS = [{
     href: 'HOME',
     children: 'Home',
@@ -47,7 +52,7 @@ const ITEMS = [{
     children: 'Contact',
 }]
 const Navigation = () => (
-    <div className="navbar">
+    <Navbar>
         {ITEMS.map(({href, children, active}) => (
             <Item
                 key={href}
@@ -55,7 +60,7 @@ const Navigation = () => (
                 active={active}
             >{children}</Item>
         ))}
-    </div>
+    </Navbar>
 )
 
 export default Navigation;
