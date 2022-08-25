@@ -1,7 +1,13 @@
 import Client from "./components/Client";
+import Layout from "../Layout";
+
 
 const Clients = () => (
-    <Client></Client>
+    <Layout title="Clients">
+        <Client/>
+        <Client/>
+        <Client/>
+    </Layout>
 )
 
-export default  Clients
+export default Clients

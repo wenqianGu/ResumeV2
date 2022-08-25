@@ -387,5 +387,8 @@ const Item = ({
 
 ### CSS 
 * position:sticky 
-* 在父DIV里面，如果子类覆盖了一些样式；可以使用 overflow:hidden 
-* 
+* 在父DIV里面，如果子类覆盖了一些样式；可以使用 overflow:hidden
+
+## TOP-Bottom
+* 如何拆分component
+* 复用的内容提出来做component 

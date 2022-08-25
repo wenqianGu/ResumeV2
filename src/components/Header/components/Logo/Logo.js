@@ -1,13 +1,9 @@
-
 import styled from 'styled-components'
+import Highlight from "../../../Highlight";
 
  const Wrapper = styled.div`
    font-size: 1.5rem;
    font-weight: 500;
- `
- const Highlight = styled.span`
-   color: #9a3737;
-   margin-right: 0.5rem;
  `
 const Logo = () => (
     <Wrapper>
