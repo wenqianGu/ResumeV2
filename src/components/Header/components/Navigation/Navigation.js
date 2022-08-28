@@ -1,4 +1,3 @@
-
 /**
  * props
  * 当我们使用HTML Element 时，相似的责任/UI会在
@@ -35,29 +34,42 @@ const Navbar = styled.div`
   display: flex;
 `
 const ITEMS = [{
+    page: 'HOME_PAGE',
     href: 'HOME',
     children: 'Home',
 }, {
+    page: 'RESUME_PAGE',
     href: 'RESUME',
     children: 'Resume',
 }, {
+    page: 'SERVICES_PAGE',
     href: 'SERVICES',
     children: 'Services',
 }, {
+    page: 'BLOG_PAGE',
     href: 'BLOG',
     children: 'Blog',
-    active:true,
 }, {
+    page: 'CONTACT_PAGE',
     href: 'CONTACT',
     children: 'Contact',
 }]
-const Navigation = () => (
+const Navigation = ({
+                        activePage,
+                        setActivePage,
+                    }) => (
     <Navbar>
-        {ITEMS.map(({href, children, active}) => (
+        {ITEMS.map(({href, children, page}) => (
             <Item
                 key={href}
                 href={href}
-                active={active}
+                active={activePage === page}
+                onClick = {
+                    (event) => {
+                        event.preventDefault()
+                        setActivePage(page)
+                    }
+                }
             >{children}</Item>
         ))}
     </Navbar>

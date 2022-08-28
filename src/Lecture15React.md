@@ -392,3 +392,206 @@ const Item = ({
 ## TOP-Bottom
 * 如何拆分component
 * 复用的内容提出来做component 
+
+## Single Page Application 
+* Wikipedia 分页
+  - 点击之后，整个页面重新加载
+* React 官网 -SPA ->没有改动的内容，不需要再加载 
+  - 质的性能提升，按需加载 
+
+**SPA CSS实现方法**
+```jsx
+import React from 'react'
+import styled, {css} from 'styled-components'
+
+const Item = styled.div`
+  display: none;
+  ${({active}) => active && css`
+    display: initial;
+  `}
+`
+// single page application SPA ->单页应用
+
+const Page = () => (
+    <div>
+        <Item active>Home Page</Item>
+        <Item>Resume Page</Item>
+        <Item>Service Page</Item>
+        <Item>Blog Page</Item>
+        <Item>Contact Page</Item>
+    </div>
+)
+
+export default Page 
+```
+#### Navigation / Page 同步改变 切换页面 
+1. Lifting  
+   * 找到最小的共同父类 
+* 页面结构 
+  - App
+    - Header 
+      - Navigation {Active}
+    - Page {Active}
+    - Footer 
+
+* 找到最小公用组件，从该组件作为 props 传递回来 
+- App {ACTIVE_PAGE}
+    - Header
+        - Navigation 
+    - Page 
+    - Footer
+* Navigation Page 的active值如何互相引用；
+  * 把Page的Active Page的值 传给Navigation
+
+**切换页面**
+```js
+
+const a = (activePage) => {
+    activePage = 'HOME_PAGE'
+    console.log(`a:${activePage}`)
+} // copy by value  只传了值进来，不会修改外面的变量值- 独立于外面的let activePage 
+const b = (activePage) => console.log(`b:${activePage}`)
+// string copy by value; 改值之后，会影响之前的reference吗？  不会
+// 改成 object之后，修改值可以影响之前的reference 
+
+let activePage = 'RESUME_PAGE'
+
+a(activePage) //a:HOME_PAGE
+b(activePage) // b:RESUME_PAGE
+```
+* Copy by reference -> object (array是一种)
+* Copy by value -> string number boolean undefined null 
+
+**Copy/pass by Reference**
+- a b 指向相同的object引用地址，修改内容是修改的object activePage本身；
+- 
+```js
+const a = (activePage) => {
+    activePage.value = 'HOME_PAGE'
+    console.log(`a:${activePage.value}`)
+} 
+const b = (activePage) => console.log(`b:${activePage.value}`)
+
+
+let activePage = {value:'RESUME_PAGE'}
+
+a(activePage) //a:HOME_PAGE
+b(activePage) // b:HOME_PAGE
+```
+
+#### 声明式变成是基于命令式变成做的二次开发 
+* 计算机的底层开发，都是命令式的 
+ - 在 Navigation里，Item里面onClick（）切换页面，并未实现
+ - 比如再App里面更新了activePage的值，但是React并不知道要去更新页面
+ - 可以再index.js里面增加 3s自动re-render一次，可以实现页面切换
+ - Angular.js 是这个开发逻辑
+   - index.js 里面 加 setInterval -> CPU占用不停，一直不停的render 页面
+
+#### 按需刷新 （useState）
+* React: 你只负责写逻辑，剩下交给React 
+  - State 
+  - 所有与UI相关的动态可变数据都需要作为 State 保存
+  - React 根据最新的 state 动态刷新组件
+- React API useState 
+
+**App.js**
+ - useState 参数时 initial state
+ - 返回的值时一个array，第0个值时state, 第一个值时setState
+
+```jsx
+function App(){
+    // const [] = useState('BLOG_PAGE') 是一个array 第0个值，是state本身；第一个值是stateSetter
+    // const stateCreator = useState('BLOG_PAGE') // useState接受一个参数，作为一个state的初始值
+    // const ACTIVE_PAGE=stateCreator[0] // 在什么都没做的时候，保存的值是BLOG_PAGE
+    // const setActivePage = stateCreator[1] // 当需要更新state的时候，调用stateSetter来更新
+    // 当setActivePage被调用的时候，React就知道，activePage发生了更新，就会brodcast告诉Header 
+    const [ACTIVE_PAGE, setActivePage ] = useState('BLOG_PAGE')
+}
+```
+* Developer负责写state的变化，React负责去re-render相关的更新 
+* 当activePage发生变化时 
+    - App 通知 Header / Page 更新active page 
+    - 在Profiler里面可以看到 
+      - re-render的页面 
+        - Header 
+            -Logo 
+          - Navigation 
+        -Page 
+
+
+            
+### React 协调 
+* https://zh-hans.reactjs.org/docs/reconciliation.html
+* Reconciliation 
+  - Virtual DOM 
+  - Browser DOM 
+    - Browser DOM 非常非常消耗资源的，重排(re-flow)和重绘(re-paint)  
+      - 计算每个元素的精准位置，是基于重排 和 重绘两个算法
+    - React 网站 教程 博客 社区 页面上任何一个元素，都会影响其他元素的位置；
+    - $0.getClientRects() 
+* Performance 
+  - 当前应用对CPU GPU 和内存的压力 
+
+* React是按照需求 更新的
+  * Browser DOM 是一个树状结构 
+    * HTML 
+      * body
+        * div
+      * footer 
+  - 当每次 setState -> re-render -> VDOM 比较上一个virtual DOM 
+  - 获取到更改的片段 -> Browser DOM -> 重排 和 重绘 
+  
+* 比如 P1
+  * App 
+    * Header 
+      * Navigation
+        * Item {active}
+        * Item
+    * page 
+      * HomePage {active}
+      * ResumePage
+      * ServicePage
+    * Footer
+
+    
+
+### React 原则
+* 所有动态的数据都使用state 
+* state lifting 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

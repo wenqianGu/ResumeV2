@@ -5,22 +5,25 @@ import styled from 'styled-components'
 
 const Wrapper = styled.header`
   padding: 15px 0;
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 `
 const Left = styled.div`
-    flex: 1;
+  flex: 1;
 `
 const Right = styled.div`
 `
 
-const Header = () => (
+const Header = ({
+                    activePage,
+                    setActivePage,
+                }) => (
     <Wrapper>
         <Left>
             <Logo/>
         </Left>
         <Right>
-            <Navigation />
+            <Navigation activePage={activePage} setActivePage={setActivePage}/>
         </Right>
     </Wrapper>
 )
