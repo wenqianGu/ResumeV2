@@ -600,7 +600,6 @@ const Navigation = ({
  - Dependenci里面的值发生改变，调用effect （请执行 第一个参数 副作用 effect）
 * 因为setState是异步的，如果涉及到setState更改成功之后，再去做XXX操作的时候 ->用 useEffect来解决这个异步的问题 
 
-* 当参数二
 ```jsx
 const App = () => {
     // const stateCreator =  useState('BLOG_PAGE')
@@ -630,33 +629,77 @@ const App = () => {
 }
 export default App;
 ```
+### 一定不能再render里面直接 setState 
+* 比如 navBar会直接渲染页面，然后因为setState就会又渲染页面，渲染页面-> setState->渲染页面 ->setState 就进入死循环了 
+
+```jsx
+const Navigation = ({
+    activePage,
+    setActivePage,
+}) => {
+    setActivePage('HOME_PAGE') // 会进入死循环；即使加入if 判断，也有进入死循环的风险 
+    return (
+        <Navbar>
+            {ITEMS.map(({ href, children, page }) => (
+                <Item
+                    key={href}
+                    href={href}
+                    active={activePage === page}
+                    onClick={
+                        (event) => {
+                            event.preventDefault()
+                            setActivePage(page)
+                        }
+                    }
+                >{children}</Item>
+            ))}
+        </Navbar>
+    )
+}
+```
+
+###P3 的建议 
+1. 尽量不要使用UI libraries -自己做自己的组件库，login 、form 等
+2. 尽量使用Javascript 等掌握Javascript之后，再使用TypeScript
+3. 
 
 
+#### React渲染性能的问题 
+1. React不够智能 ->他只能辨别 state声明 component 的依赖
+- 当页面发生变化时：
+    - 在App.js里面时智能的，能知道 只需要渲染 Header Page 
+    - 当时当循环到Header页面的时候，React就不知道Logo 需不需要重新渲染了 （实际上渲染了）
+        -Logo 等component会被re-render 
+* React的性能很好，有reconsoliation /virtual DOM /batch state setter /  按需更新，
+* 但是react做了这么多事情，但是还没有那么智能，比如上面的情况
 
+2. 还能做什么额外的performance优化？ 
+    - 包一层React.memo ()
+    - memorize 记忆起来，基于props记忆 
+    - 只要props没有发生变化，不需要re-render Logo 
 
+3. 优化了react的按需更新的
 
+4. React render analysis 、React Developer tools -profiler （）、在网上多看资料 、
+    - lighthouse [商业化的软件里面会量化新能标准]
+    - performance, accessibility, best practise, seo etc.
 
+```jsx
+const Wrapper = styled.div`
+   font-size: 1.5rem;
+   font-weight: 500;
+ `
+const Logo = React.memo(
+  () => (
+    <Wrapper>
+      <Highlight>Lisa</Highlight>
+      GU
+    </Wrapper>
+  )
+)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Logo;
+```
+### 获取元素在页面上的位置 
+* Element.getClientRects() 
+* 在chrome里面$0 ->chrome 保存当前元素 
