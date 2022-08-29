@@ -23,7 +23,7 @@ const Header = ({
             <Logo/>
         </Left>
         <Right>
-            <Navigation activePage={activePage} setActivePage={setActivePage}/>
+            <Navigation activePage={activePage} setActivePage={setActivePage} />
         </Right>
     </Wrapper>
 )

@@ -559,12 +559,77 @@ function App(){
 * 所有动态的数据都使用state 
 * state lifting 
 
- 
+## React state 更新是异步的 snapshot 胶片原理 
+1. 当React更新完一次state之后，在当前state里面的所有代码， 都还是老的state 
+```jsx
+const Navigation = ({
+                        activePage,
+                        setActivePage,
+                    }) => (
+    <Navbar>
+        {ITEMS.map(({href, children, page}) => (
+            <Item
+                key={href}
+                href={href}
+                active={activePage === page}
+                onClick = {
+                    (event) => {
+                        event.preventDefault()
+                        setActivePage(page) // （队列） -> setState -> re-render -> reconciliation -> render DOM 
+                        // 上述操作很消耗很高，所以react会把上述操作加入队列，然后react决定何时去操作上述步骤 
+                        //是否 计算 取决于用户的反馈 
+                        //切换页面时，保证在下次 screen 刷新好之前更新好 DOM 就可以啦
+                        //刷新率 60hz -可能代表0.3s 
+                        //假设浏览器 刷新 -setState setState setState 等待  -[刷新之前更新即可，否则前两次更新就浪费了] 【batch】 刷新 - 等待 
+                        console.log(activePage) // In Homepage when click the Blog page, it will show HomePage
+                        // 当前的数据，基于当前的snapshot ->操作上述步骤之前的snapshot 
+                    }
+                }
+            >{children}</Item>
+        ))}
+    </Navbar>
+)
+```
 
+#### UseEffect
+* 当一个message 基于 setActivePage的时候，因为React VDOM 更新的底层原理，message展示的setState之前的snapshot 
+* 副作用
+* useEffect(effect, depes)
+ - 第一个是一个callback function 
+ - 第二个是一个dependence  deps [] 
+ - Dependenci里面的值发生改变，调用effect （请执行 第一个参数 副作用 effect）
+* 因为setState是异步的，如果涉及到setState更改成功之后，再去做XXX操作的时候 ->用 useEffect来解决这个异步的问题 
 
+* 当参数二
+```jsx
+const App = () => {
+    // const stateCreator =  useState('BLOG_PAGE')
+    // const ACTIVE_PAGE = stateCreator[0]
+    // const setActivePage = stateCreator[1]
+    const [ACTIVE_PAGE, setActivePage ] = useState('BLOG_PAGE')
+    const [message, setMessage] = useState()
+    useEffect(()=>{
+      setMessage(`Page changed to ${ACTIVE_PAGE}`)
+    }
+    ,[ACTIVE_PAGE])
 
+    // message的副作用，当message成功改变时，message只展示1s 然后消失
+    useEffect(()=>{
+        setTimeout(()=>{
+            setMessage()
+        },1000)
+    },[message])
 
-
+    return (<Wrapper>
+      {message && (<div>{message}</div>)}
+        <Container>
+            <Header activePage={ACTIVE_PAGE} setActivePage = {setActivePage} />
+            <Page activePage={ACTIVE_PAGE} />
+        </Container>
+    </Wrapper>)
+}
+export default App;
+```
 
 
 

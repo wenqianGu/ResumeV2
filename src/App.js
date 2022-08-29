@@ -1,7 +1,7 @@
 import Header from './components/Header';
 import styled from 'styled-components'
 import Page from "./components/Page/Page";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const Wrapper = styled.div`
   background-color: #f5f5f5;;
@@ -19,10 +19,22 @@ const App = () => {
     // const ACTIVE_PAGE = stateCreator[0]
     // const setActivePage = stateCreator[1]
     const [ACTIVE_PAGE, setActivePage ] = useState('BLOG_PAGE')
+    const [message, setMessage] = useState('test')
+    useEffect(()=>{
+      setMessage(`Page changed to ${ACTIVE_PAGE}`)
+    }
+    ,[ACTIVE_PAGE])
+
+    useEffect(()=>{
+      setTimeout(()=>{
+        setMessage()
+      },1000)
+    },[message])
 
     return (<Wrapper>
+      {message && (<div>{message}</div>)}
         <Container>
-            <Header activePage={ACTIVE_PAGE} setActivePage = {setActivePage}/>
+            <Header activePage={ACTIVE_PAGE} setActivePage = {setActivePage} />
             <Page activePage={ACTIVE_PAGE} />
         </Container>
     </Wrapper>)
